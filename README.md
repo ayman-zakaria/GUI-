@@ -73,6 +73,18 @@ headless=true       # or false
 ## Reports & artifacts
 - TestNG's default HTML/XML reports are generated under `target/surefire-reports`.
 - Screenshots for any failed test are saved to `target/screenshots/<testName>.png`.
+- **Allure report**: results are written to `target/allure-results` on every `mvn test` run
+  (via `allure-testng` + the `allure.properties` config). To view the report:
+  ```bash
+  mvn allure:serve
+  ```
+  This downloads the Allure commandline automatically (no separate install needed), builds
+  the report from `target/allure-results`, and opens it in your browser. Use `mvn allure:report`
+  instead if you just want the static HTML written to `target/site/allure-maven-plugin`
+  without opening a browser.
+- Failed-test screenshots are also attached directly to the corresponding test in the Allure
+  report, and page-object actions (navigation, clicks, waits) appear as Allure **steps** via
+  `@Step` annotations, so a failure's report shows exactly which UI action failed.
 
 ## Notes
 - Locators use stable attributes exposed by the-internet's markup (ids / link text) and avoid

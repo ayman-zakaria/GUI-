@@ -2,6 +2,7 @@ package com.assessment.gui.base;
 
 import com.assessment.gui.pages.HomePage;
 import com.assessment.gui.utils.DriverFactory;
+import io.qameta.allure.Allure;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
@@ -15,7 +16,8 @@ import java.nio.file.Files;
  * Base class for all GUI test classes.
  * Owns the WebDriver lifecycle (create before each test, quit after) so that
  * individual test classes never manage the driver directly, and captures a
- * screenshot automatically whenever a test fails.
+ * screenshot automatically whenever a test fails - both to disk and as an
+ * Allure attachment on the failed test.
  */
 public abstract class BaseTest {
 
@@ -42,6 +44,10 @@ public abstract class BaseTest {
         try {
             org.openqa.selenium.TakesScreenshot ts = (org.openqa.selenium.TakesScreenshot) driver;
             byte[] screenshot = ts.getScreenshotAs(org.openqa.selenium.OutputType.BYTES);
+
+            Allure.addAttachment(testName + " - failure screenshot",
+                    new ByteArrayInputStream(screenshot));
+
             File targetDir = new File("target/screenshots");
             if (!targetDir.exists()) {
                 targetDir.mkdirs();

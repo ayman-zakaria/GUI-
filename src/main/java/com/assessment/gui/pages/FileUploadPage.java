@@ -1,5 +1,6 @@
 package com.assessment.gui.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -21,20 +22,24 @@ public class FileUploadPage extends BasePage {
      * Selects the file to upload. The absolute path is supplied by the caller
      * (built from test data / a resources folder), never hard-coded here.
      */
+    @Step("Select file for upload: {absoluteFilePath}")
     public FileUploadPage selectFile(String absoluteFilePath) {
         driver.findElement(FILE_INPUT).sendKeys(absoluteFilePath);
         return this;
     }
 
+    @Step("Submit the selected file")
     public FileUploadPage submit() {
         click(SUBMIT_BUTTON);
         return this;
     }
 
+    @Step("Read the uploaded file name shown on the result page")
     public String getUploadedFileName() {
         return getText(UPLOADED_FILES_LABEL);
     }
 
+    @Step("Read the result page header text")
     public String getResultHeaderText() {
         return getText(PAGE_HEADER);
     }

@@ -1,5 +1,6 @@
 package com.assessment.gui.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -18,6 +19,7 @@ public class DynamicLoadingExamplePage extends BasePage {
         super(driver);
     }
 
+    @Step("Click Start on the dynamic loading example")
     public DynamicLoadingExamplePage clickStart() {
         click(START_BUTTON);
         return this;
@@ -27,6 +29,7 @@ public class DynamicLoadingExamplePage extends BasePage {
      * Waits for the loading spinner to disappear, i.e. explicit synchronization
      * rather than a hard-coded Thread.sleep(), then returns the finished text.
      */
+    @Step("Wait for loading to finish and read the result text")
     public String waitForResultText() {
         waitForInvisible(LOADING_INDICATOR);
         return getText(FINISH_TEXT);

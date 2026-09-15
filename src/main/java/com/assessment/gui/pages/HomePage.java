@@ -1,5 +1,6 @@
 package com.assessment.gui.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -22,11 +23,13 @@ public class HomePage extends BasePage {
         return this;
     }
 
+    @Step("Navigate to File Upload page")
     public FileUploadPage goToFileUpload() {
         click(FILE_UPLOAD_LINK);
         return new FileUploadPage(driver);
     }
 
+    @Step("Navigate to Dynamic Loading page")
     public DynamicLoadingListPage goToDynamicLoading() {
         click(DYNAMIC_LOADING_LINK);
         return new DynamicLoadingListPage(driver);

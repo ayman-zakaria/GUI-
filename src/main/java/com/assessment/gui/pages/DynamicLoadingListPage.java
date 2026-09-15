@@ -1,5 +1,6 @@
 package com.assessment.gui.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -14,6 +15,7 @@ public class DynamicLoadingListPage extends BasePage {
         super(driver);
     }
 
+    @Step("Open Dynamic Loading Example 2")
     public DynamicLoadingExamplePage goToExample2() {
         click(EXAMPLE_2_LINK);
         return new DynamicLoadingExamplePage(driver);
