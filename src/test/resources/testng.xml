@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="GUI Test Automation Suite" verbose="1" parallel="methods" thread-count="2">
+    <test name="The Internet - Core Scenarios">
+        <classes>
+            <class name="com.assessment.gui.tests.FileUploadTest"/>
+            <class name="com.assessment.gui.tests.DynamicLoadingTest"/>
+        </classes>
+    </test>
+</suite>
