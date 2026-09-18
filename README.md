@@ -10,35 +10,61 @@ Scenarios covered:
    verify the displayed text is `Hello World!`.
 
 ## Design highlights
-- **Page Object Model**: `HomePage`, `FileUploadPage`, `DynamicLoadingListPage` and
-  `DynamicLoadingExamplePage` each encapsulate the locators and interactions for a single page.
-- **Fluent design**: page-object methods return the next relevant page object (or `this`), so
-  tests read as a chained flow, e.g.
+- **Page Object Model** (`Pages` package): `HomePage`, `FileUploadPage`,
+  `DynamicLoadingListPage` and `DynamicLoadingExamplePage` each hold their own locators
+  (grouped under a `/* locators */` comment block) and expose only page-specific behaviour
+  (`/* methods */`). Each page holds its own `WebDriver` instance field (not static), so
+  pages are safe to use across parallel threads.
+- **Fluent design**: page methods return the next relevant page object (or `this`), so tests
+  read as a single chained flow:
   ```java
   homePage().goToFileUpload().selectFile(path).submit();
   ```
-- **BasePage**: centralizes explicit-wait logic (`WebDriverWait`) and common element
-  interactions, so no page object duplicates synchronization code, and no test uses
-  `Thread.sleep()`.
-- **DriverFactory**: a `ThreadLocal<WebDriver>` factory using WebDriverManager (no hard-coded
-  driver binaries/paths), enabling safe parallel execution (see `testng.xml`,
-  `parallel="methods"`).
-- **Externalized configuration & data**: environment values (`base.url`, `browser`, timeouts)
-  live in `src/main/resources/config.properties`; scenario data (expected text, file names)
-  lives in `src/test/resources/testdata.properties`. Nothing environment- or data-specific is
+- **`BasesAndConfig` package** — shared, reusable building blocks so no logic is duplicated
+  across page objects:
+  - `Waits` — static explicit-wait helpers (`visible`, `clickable`, `invisible`); the timeout
+    itself comes from `config.properties`, not a hard-coded literal.
+  - `ScrollUtils` — scrolls an element into view before it's interacted with.
+  - `ElementActions` — the single entry point pages use for `sendData` / `clickElement` /
+    `getText`; each call waits, scrolls, then acts, so this sequence is never repeated.
+  - `Screenshot` — captures a screenshot, attaches it to the Allure report, and saves it to
+    `target/screenshots`.
+  - `LogUtil` — a small static wrapper over log4j2.
+  - `ConfigReader` / `ConfigManager` — generic classpath properties loader + typed accessors
+    for environment values (base URL, browser, timeouts).
+- **`Drivers` package** — separates *how* a driver is built from *how* it's managed:
+  - `BrowserFactory` builds a configured Chrome/Firefox instance via WebDriverManager (no
+    fixed local path to a driver binary) using config-driven headless/timeout settings.
+  - `DriverManager` owns a `ThreadLocal<WebDriver>` so each test thread gets its own driver,
+    enabling safe parallel execution (see `testng.xml`, `parallel="methods"`).
+- **`Listeners` package** — `TestListener` implements TestNG's `IExecutionListener` /
+  `ITestListener` to: clear stale Allure results before a run starts, log every test's
+  outcome, and automatically capture a screenshot the moment a test fails. It's wired once
+  via `@Listeners(TestListener.class)` on `tests.BaseTest`, so every test class inherits it
+  without repeating the annotation.
+- **Externalized configuration & data**: environment values live in
+  `src/main/resources/config.properties`; scenario data (expected text, file name) lives in
+  `src/test/resources/testdata.properties`. Nothing environment- or data-specific is
   hard-coded inside page objects or test classes.
-- **BaseTest**: owns the WebDriver lifecycle (`@BeforeMethod` / `@AfterMethod`) and
-  automatically captures a screenshot to `target/screenshots` on failure.
+- **Allure reporting**: `@Step` annotations on every page-object action produce a readable
+  step-by-step report per test, with failure screenshots attached automatically.
 
 ## Project structure
 ```
-src/main/java/com/assessment/gui/
-  pages/     -> Page Object classes (BasePage + concrete pages)
-  utils/     -> DriverFactory, ConfigManager, PropertiesReader
-src/main/resources/config.properties
-src/test/java/com/assessment/gui/
-  base/      -> BaseTest (driver lifecycle)
-  tests/     -> TestNG test classes
+src/main/java/
+  BasesAndConfig/  -> ConfigReader, ConfigManager, Waits, ScrollUtils, ElementActions,
+                      Screenshot, LogUtil
+  Drivers/         -> BrowserFactory, DriverManager
+  Listeners/       -> TestListener
+  Pages/           -> HomePage, FileUploadPage, DynamicLoadingListPage, DynamicLoadingExamplePage
+src/main/resources/
+  config.properties
+  log4j2.properties
+  allure.properties
+src/test/java/tests/
+  BaseTest.java    -> driver lifecycle (@BeforeMethod/@AfterMethod), @Listeners wiring
+  FileUploadTest.java
+  DynamicLoadingTest.java
 src/test/resources/
   testng.xml
   testdata.properties
@@ -72,9 +98,12 @@ headless=true       # or false
 
 ## Reports & artifacts
 - TestNG's default HTML/XML reports are generated under `target/surefire-reports`.
-- Screenshots for any failed test are saved to `target/screenshots/<testName>.png`.
-- **Allure report**: results are written to `target/allure-results` on every `mvn test` run
-  (via `allure-testng` + the `allure.properties` config). To view the report:
+- Log files are written to `target/logs` (see `log4j2.properties`); console output is
+  colorized by level.
+- Screenshots for any failed test are saved to `target/screenshots/<testName>.png` and
+  attached to the Allure report automatically via `TestListener` + `Screenshot`.
+- **Allure report**: results are written to `target/allure-results` on every `mvn test` run.
+  To view the report:
   ```bash
   mvn allure:serve
   ```
@@ -82,12 +111,9 @@ headless=true       # or false
   the report from `target/allure-results`, and opens it in your browser. Use `mvn allure:report`
   instead if you just want the static HTML written to `target/site/allure-maven-plugin`
   without opening a browser.
-- Failed-test screenshots are also attached directly to the corresponding test in the Allure
-  report, and page-object actions (navigation, clicks, waits) appear as Allure **steps** via
-  `@Step` annotations, so a failure's report shows exactly which UI action failed.
 
 ## Notes
 - Locators use stable attributes exposed by the-internet's markup (ids / link text) and avoid
   brittle XPath where a simpler, more resilient locator is available.
-- All waits are explicit (`WebDriverWait` + `ExpectedConditions`); there is no reliance on
+- All waits are explicit (`WebDriverWait` via `BasesAndConfig.Waits`); there is no reliance on
   fixed sleeps.

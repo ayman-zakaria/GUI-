@@ -1,5 +1,6 @@
-package com.assessment.gui.pages;
+package Pages;
 
+import BasesAndConfig.ElementActions;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -7,17 +8,25 @@ import org.openqa.selenium.WebDriver;
 /**
  * Page Object for the /dynamic_loading listing page which links to Example 1 and Example 2.
  */
-public class DynamicLoadingListPage extends BasePage {
+public class DynamicLoadingListPage {
 
-    private static final By EXAMPLE_2_LINK = By.linkText("Example 2: Element rendered after the fact");
+    private final WebDriver driver;
 
     public DynamicLoadingListPage(WebDriver driver) {
-        super(driver);
+        this.driver = driver;
     }
 
+    /*
+    locators
+     */
+    private final By example2Link = By.linkText("Example 2: Element rendered after the fact");
+
+    /*
+    methods
+     */
     @Step("Open Dynamic Loading Example 2")
     public DynamicLoadingExamplePage goToExample2() {
-        click(EXAMPLE_2_LINK);
+        ElementActions.clickElement(driver, example2Link);
         return new DynamicLoadingExamplePage(driver);
     }
 }

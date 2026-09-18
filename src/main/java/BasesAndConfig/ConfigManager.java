@@ -1,12 +1,12 @@
-package com.assessment.gui.utils;
+package BasesAndConfig;
 
 /**
  * Central access point for environment configuration (config.properties).
- * Keeps environment values (URL, browser, timeouts) out of test/page-object code.
+ * Keeps environment values (base URL, browser, timeouts) out of page objects and tests.
  */
 public final class ConfigManager {
 
-    private static final PropertiesReader READER = new PropertiesReader("config.properties");
+    private static final ConfigReader READER = new ConfigReader("config.properties");
 
     private ConfigManager() {
     }

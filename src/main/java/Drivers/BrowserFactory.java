@@ -1,6 +1,8 @@
-package com.assessment.gui.utils;
+package Drivers;
 
+import BasesAndConfig.ConfigManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -10,31 +12,24 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import java.time.Duration;
 
 /**
- * Creates and manages the WebDriver instance per thread so tests can safely run in parallel.
- * Browser choice and headless mode are externalized via config.properties (no hard-coding).
+ * Builds a fully configured WebDriver instance for the requested browser.
+ * Browser choice, headless mode and timeouts are all read from configuration
+ * rather than hard-coded, and driver binaries are resolved automatically via
+ * WebDriverManager (no fixed local path to a chromedriver/geckodriver executable).
  */
-public final class DriverFactory {
+public class BrowserFactory {
 
-    private static final ThreadLocal<WebDriver> DRIVER_THREAD_LOCAL = new ThreadLocal<>();
-
-    private DriverFactory() {
+    private BrowserFactory() {
     }
 
-    public static WebDriver getDriver() {
-        if (DRIVER_THREAD_LOCAL.get() == null) {
-            DRIVER_THREAD_LOCAL.set(createDriver());
-        }
-        return DRIVER_THREAD_LOCAL.get();
-    }
-
-    private static WebDriver createDriver() {
-        String browser = ConfigManager.browser().toLowerCase();
+    public static WebDriver getBrowser(String browserName) {
         WebDriver driver;
 
-        switch (browser) {
+        switch (browserName.toLowerCase()) {
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
+                firefoxOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
                 if (ConfigManager.headless()) {
                     firefoxOptions.addArguments("-headless");
                 }
@@ -44,11 +39,14 @@ public final class DriverFactory {
             default:
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+                chromeOptions.addArguments("--no-sandbox");
+                chromeOptions.addArguments("--disable-dev-shm-usage");
+                chromeOptions.addArguments("--disable-notifications");
+                chromeOptions.addArguments("--remote-allow-origins=*");
                 if (ConfigManager.headless()) {
                     chromeOptions.addArguments("--headless=new");
                 }
-                chromeOptions.addArguments("--remote-allow-origins=*");
-                chromeOptions.addArguments("--window-size=1920,1080");
                 driver = new ChromeDriver(chromeOptions);
         }
 
@@ -56,13 +54,5 @@ public final class DriverFactory {
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(ConfigManager.pageLoadTimeoutSeconds()));
         driver.manage().window().maximize();
         return driver;
-    }
-
-    public static void quitDriver() {
-        WebDriver driver = DRIVER_THREAD_LOCAL.get();
-        if (driver != null) {
-            driver.quit();
-            DRIVER_THREAD_LOCAL.remove();
-        }
     }
 }

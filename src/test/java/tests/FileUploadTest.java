@@ -1,8 +1,7 @@
-package com.assessment.gui.tests;
+package tests;
 
-import com.assessment.gui.base.BaseTest;
-import com.assessment.gui.pages.FileUploadPage;
-import com.assessment.gui.utils.PropertiesReader;
+import BasesAndConfig.ConfigReader;
+import Pages.FileUploadPage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
@@ -21,7 +20,7 @@ import java.net.URL;
 @Feature("File Upload")
 public class FileUploadTest extends BaseTest {
 
-    private static final PropertiesReader TEST_DATA = new PropertiesReader("testdata.properties");
+    private static final ConfigReader TEST_DATA = new ConfigReader("testdata.properties");
 
     @Test(description = "Upload a small image file and verify it was uploaded successfully")
     @Severity(SeverityLevel.CRITICAL)

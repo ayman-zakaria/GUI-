@@ -1,7 +1,6 @@
-package com.assessment.gui.tests;
+package tests;
 
-import com.assessment.gui.base.BaseTest;
-import com.assessment.gui.utils.PropertiesReader;
+import BasesAndConfig.ConfigReader;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
@@ -17,7 +16,7 @@ import org.testng.annotations.Test;
 @Feature("Dynamic Loading")
 public class DynamicLoadingTest extends BaseTest {
 
-    private static final PropertiesReader TEST_DATA = new PropertiesReader("testdata.properties");
+    private static final ConfigReader TEST_DATA = new ConfigReader("testdata.properties");
 
     @Test(description = "Start Example 2 dynamic loading and verify the finished text")
     @Severity(SeverityLevel.NORMAL)

@@ -1,4 +1,4 @@
-package com.assessment.gui.utils;
+package BasesAndConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,18 +6,19 @@ import java.util.Properties;
 
 /**
  * Generic, reusable properties file reader.
- * Loads a properties file once from the classpath and exposes typed accessors,
- * so that no configuration or test data values need to be hard-coded in the code.
+ * Loads a properties file from the classpath (src/main/resources or src/test/resources)
+ * so that no configuration or test data values need to be hard-coded in the code, and no
+ * absolute machine-specific path is required (unlike a fixed disk path).
  */
-public class PropertiesReader {
+public class ConfigReader {
 
     private final Properties properties;
 
-    public PropertiesReader(String classpathResourceName) {
+    public ConfigReader(String classpathResourceName) {
         this.properties = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream(classpathResourceName)) {
             if (input == null) {
-                throw new IllegalStateException("Unable to find resource: " + classpathResourceName);
+                throw new IllegalStateException("Unable to find resource on classpath: " + classpathResourceName);
             }
             properties.load(input);
         } catch (IOException e) {
