@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="GUI Test Automation Suite" verbose="1" parallel="methods" thread-count="2">
-    <!-- TestListener is also declared via @Listeners(TestListener.class) on tests.BaseTest,
-         which TestNG picks up for every subclass - no need to repeat it here. -->
+<suite name="GUI Test Automation Suite" verbose="1">
     <test name="The Internet - Core Scenarios">
         <classes>
             <class name="tests.FileUploadTest"/>

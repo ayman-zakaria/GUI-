@@ -8,11 +8,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-/**
- * Static explicit-wait helpers used by {@link ElementActions} and page objects.
- * Centralizing synchronization here means no page object or test needs to build its
- * own WebDriverWait or rely on a fixed Thread.sleep().
- */
+// Explicit waits live here instead of inside each page object - one place to tweak
+
 public class Waits {
 
     private Waits() {

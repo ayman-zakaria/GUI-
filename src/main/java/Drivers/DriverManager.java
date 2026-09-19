@@ -3,10 +3,8 @@ package Drivers;
 import BasesAndConfig.LogUtil;
 import org.openqa.selenium.WebDriver;
 
-/**
- * Owns the WebDriver instance per test thread, so tests can run safely in parallel
- * without sharing (or accidentally overwriting) each other's driver.
- */
+// Holds one driver per thread so parallel="methods" in testng.xml doesn't cause
+// tests to fight over the same browser window.
 public class DriverManager {
 
     private DriverManager() {

@@ -1,16 +1,17 @@
 package tests;
 
+import java.io.File;
+import java.net.URL;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import BasesAndConfig.ConfigReader;
 import Pages.FileUploadPage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import java.io.File;
-import java.net.URL;
 
 /**
  * Verifies that a file can be selected, submitted, and that the application
@@ -40,10 +41,21 @@ public class FileUploadTest extends BaseTest {
                 "The uploaded file name displayed on the page should match the file that was submitted");
     }
 
-    /**
-     * Resolves the absolute filesystem path of a bundled test file from the classpath,
-     * avoiding any hard-coded absolute path in the test itself.
-     */
+    // negative case - just landing on the page shouldn't ever show the success state.
+    @Test(description = "Verify navigating to the upload page directly shows the form, not a success state")
+    @Severity(SeverityLevel.MINOR)
+    public void shouldShowUploadFormOnDirectNavigation() {
+        String expectedFormHeader = TEST_DATA.get("fileUpload.formHeaderText");
+
+        String actualHeader = homePage()
+                .goToFileUpload()
+                .getResultHeaderText();
+
+        Assert.assertEquals(actualHeader, expectedFormHeader,
+                "Just opening the upload page should show the empty form, not a leftover success message");
+    }
+
+    
     private String resolveTestFilePath(String fileName) {
         URL resource = getClass().getClassLoader().getResource("testfiles/" + fileName);
         if (resource == null) {

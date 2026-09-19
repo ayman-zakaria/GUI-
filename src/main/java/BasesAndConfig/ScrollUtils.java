@@ -6,7 +6,6 @@ import org.openqa.selenium.WebDriver;
 
 /**
  * Scrolls an element into view before interacting with it, so elements below the fold
- * don't cause a false "not clickable" failure.
  */
 public class ScrollUtils {
 

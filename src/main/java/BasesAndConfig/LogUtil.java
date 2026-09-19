@@ -4,9 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Thin static wrapper around log4j2 so callers don't need to fetch their own Logger
- * instance; the logger name is derived from the calling class automatically.
- */
+ * Wraps log4j2 so callers just say LogUtil.info("...") instead of grabbing their
+ * own Logger instance every time. */
 public class LogUtil {
 
     private LogUtil() {

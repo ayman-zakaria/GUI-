@@ -9,11 +9,8 @@ import org.testng.ITestResult;
 
 import java.io.File;
 
-/**
- * Cross-cutting TestNG hooks: clears stale Allure results before the run starts,
- * logs each test's outcome, and captures a screenshot the moment a GUI test fails -
- * so this logic lives in one place instead of being duplicated in every test class.
- */
+// Hooked up once on BaseTest via @Listeners, so every test gets this for free:
+// screenshot attached automatically instead of relying on someone.
 public class TestListener implements IExecutionListener, ITestListener {
 
     private static final String ALLURE_RESULTS_DIR = "target/allure-results";

@@ -3,11 +3,8 @@ package BasesAndConfig;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-/**
- * Every element interaction used by page objects goes through here, so that
- * synchronization (wait) and visibility (scroll into view) are never duplicated
- * inside individual Page Object methods.
- */
+// Page objects call these instead of touching the driver directly - keeps the
+// wait -> scroll -> act sequence in one spot instead of copy-pasted in every page.
 public class ElementActions {
 
     private ElementActions() {

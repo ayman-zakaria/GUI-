@@ -1,16 +1,14 @@
 package Pages;
 
-import BasesAndConfig.ElementActions;
-import BasesAndConfig.Waits;
-import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-/**
- * Page Object for a single Dynamic Loading example page (Example 2).
- * Handles the click on "Start" and proper synchronization while the loading
- * indicator is shown, then exposes the finished text once it is rendered.
- */
+import BasesAndConfig.ElementActions;
+import BasesAndConfig.Waits;
+import io.qameta.allure.Step;
+
+// Example 2 - the element only shows up after the loading spinner disappears,
+// so waitForResultText() waits on the spinner instead of the text itself.
 public class DynamicLoadingExamplePage {
 
     private final WebDriver driver;
@@ -39,5 +37,13 @@ public class DynamicLoadingExamplePage {
     public String waitForResultText() {
         Waits.waitForElementInvisible(driver, loadingIndicator);
         return ElementActions.getText(driver, finishText);
+    }
+
+    /* for the edge-case test - checks right now, no waiting. Example 2 doesn't just hide
+    the element with CSS, it's not even in the DOM until the JS inserts it after loading,
+    */
+    @Step("Check whether the result text is present yet")
+    public boolean isResultTextPresent() {
+        return !driver.findElements(finishText).isEmpty();
     }
 }
