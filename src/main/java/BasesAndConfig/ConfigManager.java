@@ -1,9 +1,7 @@
 package BasesAndConfig;
 
-/**
- * Central access point for environment configuration (config.properties).
- * Keeps environment values (base URL, browser, timeouts) out of page objects and tests.
- */
+// Small wrapper so the rest of the code doesn't deal with raw property strings/keys.
+// Add a getter here whenever a new value gets added to config.properties.
 public final class ConfigManager {
 
     private static final ConfigReader READER = new ConfigReader("config.properties");

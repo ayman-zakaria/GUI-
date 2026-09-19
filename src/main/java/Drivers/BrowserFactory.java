@@ -1,7 +1,7 @@
 package Drivers;
 
-import BasesAndConfig.ConfigManager;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import java.time.Duration;
+
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -9,14 +9,11 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
-import java.time.Duration;
+import BasesAndConfig.ConfigManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Builds a fully configured WebDriver instance for the requested browser.
- * Browser choice, headless mode and timeouts are all read from configuration
- * rather than hard-coded, and driver binaries are resolved automatically via
- * WebDriverManager (no fixed local path to a chromedriver/geckodriver executable).
- */
+// Builds the actual WebDriver. WebDriverManager handles getting the right
+// chromedriver/geckodriver version 
 public class BrowserFactory {
 
     private BrowserFactory() {

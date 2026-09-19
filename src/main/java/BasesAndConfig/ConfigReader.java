@@ -4,12 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * Generic, reusable properties file reader.
- * Loads a properties file from the classpath (src/main/resources or src/test/resources)
- * so that no configuration or test data values need to be hard-coded in the code, and no
- * absolute machine-specific path is required (unlike a fixed disk path).
- */
+// Reads any .properties file off the classpath. Used for both the app config
+// and the test data file
 public class ConfigReader {
 
     private final Properties properties;

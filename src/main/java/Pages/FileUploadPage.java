@@ -1,13 +1,13 @@
 package Pages;
 
-import BasesAndConfig.ElementActions;
-import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-/**
- * Page Object for the /upload (File Upload) page.
- */
+import BasesAndConfig.ElementActions;
+import io.qameta.allure.Step;
+
+// upload page - pick a file, hit submit, check the confirmation.
+
 public class FileUploadPage {
 
     private final WebDriver driver;

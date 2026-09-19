@@ -9,13 +9,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 
-/**
- * Base class for all GUI test classes.
- * Creates a fresh WebDriver per test method (via DriverManager/BrowserFactory) and
- * quits it afterwards, so individual test classes never manage the driver directly.
- * {@link TestListener} is wired here once so every subclass gets logging, Allure
- * result cleanup and failure screenshots without repeating the annotation.
- */
+// Spins up a fresh driver before each test and kills it after 
+
 @Listeners(TestListener.class)
 public abstract class BaseTest {
 

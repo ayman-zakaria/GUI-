@@ -6,11 +6,8 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-/**
- * Page Object for the "the-internet" home page (list of example links).
- * Navigation methods are fluent - each returns the page object for wherever it leads,
- * so a test can chain: new HomePage(driver).open().goToFileUpload()...
- */
+// Landing page - just the two links we care about
+
 public class HomePage {
 
     private final WebDriver driver;
